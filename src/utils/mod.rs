@@ -26,16 +26,19 @@ pub fn normalize_id(content: &str) -> String {
         .chars()
         .filter_map(|ch| {
             if ch.is_alphanumeric() || ch == '_' || ch == '-' {
-                Some(ch.to_ascii_lowercase())
+                //Some(ch.to_ascii_lowercase())
+                Some(ch)
             } else if ch.is_whitespace() {
                 Some('-')
             } else {
                 None
             }
         })
-        .collect::<String>();
+        .collect::<String>().to_lowercase();
     // Ensure that the first character is [A-Za-z]
-    if ret.chars().next().map_or(false, |c| !c.is_ascii_alphabetic()) {
+    // if ret.chars().next().map_or(false, |c| !c.is_ascii_alphabetic()) {
+    // Note: My modification. Using alphanumeric instead of ascii_alphabetic
+    if ret.chars().next().map_or(false, |c| !c.is_alphanumeric()) {
         ret.insert(0, 'a');
     }
     ret
