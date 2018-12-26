@@ -1,7 +1,17 @@
 language: rust
 
+rust:
+  - stable
+  - beta
+  - nightly
+
+os:
+  - linux
+  - osx
+
 cache: 
-  - cargo
+  timeout: 360
+  cargo: true
 
 before_cache:
   - chmod -R a+r $HOME/.cargo
@@ -9,19 +19,10 @@ before_cache:
 env:
   global:
     - CRATE_NAME=mdbook
-    - TARGET=x86_64-unknown-linux-gnu
-
-install:
-  - sh ci/install.sh
-  - export PATH=$PATH:$HOME/.cargo/bin
 
 script:
-  - cargo build --all --no-default-features
-  - cargo build --verbose
-  - cargo test --verbose
-
-after_success:
-  - bash ci/github_pages.sh
+  - cargo test --all
+  - cargo test --all --no-default-features
 
 before_deploy:
   - sh ci/before_deploy.sh
@@ -39,8 +40,8 @@ deploy:
 
 branches:
   only:
-    - "/^v\\d+\\.\\d+\\.\\d+.*$/"
     - master
+    - /^v\d+\.\d+\.\d+.*$/
 
 notifications:
   email:
